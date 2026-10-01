@@ -1,0 +1,495 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Power BI portfolio case study: Expense Analytics Dashboard." />
+  <title>Expense Analytics Dashboard | Power BI Portfolio</title>
+
+  <style>
+    :root{
+      --bg:#0b0c0e;
+      --panel:#121418;
+      --panel-2:#181b20;
+      --text:#f4f5f7;
+      --muted:#a8adb7;
+      --line:#2b2f36;
+      --accent:#f5c342;
+      --accent-2:#d9a822;
+      --max:1180px;
+      --radius:22px;
+      --shadow:0 20px 60px rgba(0,0,0,.28);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(245,195,66,.10), transparent 28%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height:1.6;
+    }
+
+    a{color:inherit;text-decoration:none}
+    img{display:block;max-width:100%}
+
+    .wrap{width:min(var(--max), calc(100% - 40px));margin:auto}
+
+    .nav{
+      position:sticky;top:0;z-index:20;
+      backdrop-filter:blur(14px);
+      background:rgba(11,12,14,.78);
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+
+    .nav-inner{
+      min-height:68px;
+      display:flex;align-items:center;justify-content:space-between;gap:24px;
+    }
+
+    .brand{
+      font-weight:800;letter-spacing:.02em;
+      display:flex;align-items:center;gap:10px;
+    }
+
+    .brand-dot{
+      width:11px;height:11px;border-radius:3px;background:var(--accent);
+      transform:rotate(10deg);
+      box-shadow:0 0 24px rgba(245,195,66,.45);
+    }
+
+    .nav-links{display:flex;gap:22px;color:var(--muted);font-size:.94rem}
+    .nav-links a:hover{color:var(--text)}
+
+    .hero{
+      padding:92px 0 54px;
+      display:grid;
+      grid-template-columns:1.05fr .95fr;
+      align-items:center;
+      gap:54px;
+    }
+
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:9px;
+      color:var(--accent);
+      font-weight:700;font-size:.78rem;letter-spacing:.14em;text-transform:uppercase;
+      margin-bottom:18px;
+    }
+
+    .eyebrow:before{content:"";width:34px;height:2px;background:var(--accent)}
+
+    h1{
+      font-size:clamp(2.7rem, 6vw, 5.7rem);
+      line-height:.98;
+      margin:0 0 24px;
+      letter-spacing:-.055em;
+      max-width:760px;
+    }
+
+    .lead{
+      color:var(--muted);
+      font-size:clamp(1.04rem, 1.7vw, 1.2rem);
+      max-width:700px;
+      margin:0 0 30px;
+    }
+
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:34px}
+
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;
+      min-height:48px;padding:0 18px;border-radius:12px;
+      border:1px solid var(--line);
+      font-weight:750;font-size:.94rem;
+      transition:.18s ease;
+    }
+
+    .btn.primary{
+      background:var(--accent);color:#121212;border-color:var(--accent);
+    }
+    .btn.primary:hover{background:#ffd25c;transform:translateY(-1px)}
+    .btn.secondary:hover{border-color:#555b64;background:#14171b}
+
+    .meta{
+      display:grid;grid-template-columns:repeat(4, minmax(0,1fr));
+      gap:12px;
+      margin-top:18px;
+    }
+
+    .meta-card{
+      padding:16px 16px 15px;
+      border:1px solid var(--line);
+      border-radius:14px;background:rgba(255,255,255,.018);
+    }
+    .meta-card span{display:block;color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;margin-bottom:5px}
+    .meta-card strong{font-size:.95rem}
+
+    .hero-shot{
+      border:1px solid #363a42;
+      border-radius:18px;
+      padding:10px;
+      background:linear-gradient(145deg,#191c21,#0f1114);
+      box-shadow:var(--shadow);
+      transform:perspective(1200px) rotateY(-2deg) rotateX(1deg);
+    }
+    .hero-shot img{border-radius:11px}
+    .caption{color:#8e949f;font-size:.78rem;margin:10px 4px 2px}
+
+    section{padding:72px 0}
+    .section-title{
+      display:flex;align-items:end;justify-content:space-between;gap:20px;
+      margin-bottom:28px;
+    }
+    .section-title h2{
+      margin:0;
+      font-size:clamp(1.9rem,3vw,3rem);
+      letter-spacing:-.035em;
+      line-height:1.06;
+    }
+    .section-title p{margin:0;color:var(--muted);max-width:620px}
+
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+
+    .card{
+      background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.015));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:27px;
+    }
+    .card h3{margin:0 0 8px;font-size:1.15rem}
+    .card p{margin:0;color:var(--muted)}
+    .card .kicker{color:var(--accent);font-weight:800;font-size:.78rem;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px}
+
+    .question{
+      font-size:clamp(1.45rem,3vw,2.4rem);
+      line-height:1.25;
+      letter-spacing:-.03em;
+      margin:0;
+      max-width:900px;
+    }
+
+    .feature{
+      padding:23px;
+      min-height:168px;
+    }
+    .feature-num{
+      width:34px;height:34px;border-radius:10px;background:rgba(245,195,66,.12);
+      border:1px solid rgba(245,195,66,.24);
+      display:grid;place-items:center;color:var(--accent);font-weight:900;margin-bottom:18px;
+    }
+
+    .shot-panel{
+      border-radius:var(--radius);
+      border:1px solid var(--line);
+      background:#0f1114;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .shot-panel img{width:100%}
+
+    .report-pages{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background:#13161a;
+      color:#c7cad0;
+      padding:9px 12px;border-radius:999px;font-size:.88rem;
+    }
+
+    .skills{
+      display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;
+    }
+
+    .skill{
+      padding:8px 11px;border-radius:10px;
+      border:1px solid rgba(245,195,66,.2);
+      background:rgba(245,195,66,.07);
+      color:#f3d678;font-size:.86rem;font-weight:650;
+    }
+
+    .note{
+      padding:22px 24px;
+      border-left:3px solid var(--accent);
+      background:#111317;
+      color:#c9cdd4;
+      border-radius:0 14px 14px 0;
+    }
+
+    .cta{
+      margin:40px 0 90px;
+      padding:38px;
+      border:1px solid var(--line);
+      border-radius:26px;
+      background:
+        linear-gradient(120deg,rgba(245,195,66,.14),rgba(245,195,66,0) 55%),
+        #121418;
+      display:flex;justify-content:space-between;align-items:center;gap:30px;
+    }
+    .cta h2{margin:0 0 8px;font-size:clamp(1.7rem,3vw,2.5rem)}
+    .cta p{margin:0;color:var(--muted);max-width:670px}
+
+    footer{
+      border-top:1px solid var(--line);
+      color:#838995;
+      padding:24px 0 36px;
+      font-size:.86rem;
+    }
+
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr;padding-top:64px}
+      .hero-shot{transform:none}
+      .grid-3{grid-template-columns:1fr 1fr}
+      .meta{grid-template-columns:1fr 1fr}
+      .cta{align-items:flex-start;flex-direction:column}
+    }
+
+    @media (max-width: 620px){
+      .wrap{width:min(100% - 24px,var(--max))}
+      .nav-links{display:none}
+      .hero{padding-top:46px;gap:34px}
+      .grid-2,.grid-3{grid-template-columns:1fr}
+      .meta{grid-template-columns:1fr 1fr}
+      section{padding:54px 0}
+      .card{padding:22px}
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top" aria-label="Portfolio home">
+        <span class="brand-dot"></span>
+        <span>POWER BI PORTFOLIO</span>
+      </a>
+      <div class="nav-links">
+        <a href="#case-study">Case Study</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#skills">Skills</a>
+      </div>
+    </div>
+  </nav>
+
+  <main id="top" class="wrap">
+    <div class="hero">
+      <div>
+        <div class="eyebrow">Business Intelligence Case Study</div>
+        <h1>Expense Analytics Dashboard</h1>
+        <p class="lead">
+          A multi-page Power BI reporting solution designed to help management monitor expenditure,
+          identify high-cost areas and understand how spending changes across time, departments and expense categories.
+        </p>
+
+        <div class="actions">
+          <a class="btn primary" href="#dashboard">View Dashboard</a>
+          <a class="btn secondary" href="#case-study">Read Case Study</a>
+        </div>
+
+        <div class="meta">
+          <div class="meta-card"><span>Tool</span><strong>Power BI</strong></div>
+          <div class="meta-card"><span>Type</span><strong>Management Reporting</strong></div>
+          <div class="meta-card"><span>Focus</span><strong>Expense Analysis</strong></div>
+          <div class="meta-card"><span>Format</span><strong>Multi-page Report</strong></div>
+        </div>
+      </div>
+
+      <div class="hero-shot">
+        <img src="assets/expense-overview.png" alt="Expense Analytics Power BI dashboard overview" />
+        <div class="caption">Overview page — anonymised values are shown as XX.</div>
+      </div>
+    </div>
+
+    <section id="case-study">
+      <div class="section-title">
+        <div>
+          <div class="eyebrow">01 / Business Problem</div>
+          <h2>From raw spending data to management visibility</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <p class="question">
+          How can management quickly understand total expenditure, cost movement and the main drivers of spending
+          without manually reviewing detailed transaction-level data?
+        </p>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <div>
+          <div class="eyebrow">02 / Dashboard Scope</div>
+          <h2>What the report delivers</h2>
+        </div>
+        <p>
+          The report combines executive KPIs with interactive breakdowns so users can move from a high-level view
+          to more detailed analysis.
+        </p>
+      </div>
+
+      <div class="grid-3">
+        <article class="card feature">
+          <div class="feature-num">1</div>
+          <h3>Executive KPI view</h3>
+          <p>Total cost, cost change and highest-cost department are surfaced immediately for quick management review.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="feature-num">2</div>
+          <h3>Time-based analysis</h3>
+          <p>Monthly views plus year and quarter filters make it easier to identify patterns, peaks and shifts in expenditure.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="feature-num">3</div>
+          <h3>Cost-driver breakdown</h3>
+          <p>Department and expense-item views show where spending is concentrated and which categories contribute most.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="feature-num">4</div>
+          <h3>Interactive filtering</h3>
+          <p>Users can narrow the analysis by year, quarter, department and month to investigate specific business questions.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="feature-num">5</div>
+          <h3>Multi-page reporting</h3>
+          <p>The report extends beyond the overview into cumulative analysis, structure and trends, detailed tables and revenue.</p>
+        </article>
+
+        <article class="card feature">
+          <div class="feature-num">6</div>
+          <h3>Management-oriented UX</h3>
+          <p>A KPI-first layout, consistent navigation and visual hierarchy are used to make the report practical for recurring use.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="dashboard">
+      <div class="section-title">
+        <div>
+          <div class="eyebrow">03 / Dashboard</div>
+          <h2>Expense overview</h2>
+        </div>
+        <p>
+          This page serves as the main reporting entry point, combining summary KPIs with trend and category views.
+        </p>
+      </div>
+
+      <div class="shot-panel">
+        <img src="assets/expense-overview.png" alt="Full expense overview dashboard screenshot" />
+      </div>
+
+      <div class="report-pages" aria-label="Report pages">
+        <span class="pill">Overview</span>
+        <span class="pill">Cumulative</span>
+        <span class="pill">Structure &amp; Trends</span>
+        <span class="pill">Data Table</span>
+        <span class="pill">By Group</span>
+        <span class="pill">Revenue</span>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-title">
+        <div>
+          <div class="eyebrow">04 / Design Decisions</div>
+          <h2>Built for clarity, not decoration</h2>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="kicker">Information hierarchy</div>
+          <h3>KPIs first, detail second</h3>
+          <p>
+            The top of the page answers the immediate management questions first, while supporting charts provide the context needed
+            to investigate cost movements.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Navigation</div>
+          <h3>Consistent report structure</h3>
+          <p>
+            A persistent menu and clearly separated report pages make it easier for users to move between overview, trend,
+            group-level and detailed data views.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Interaction</div>
+          <h3>Business-friendly filtering</h3>
+          <p>
+            Time and organisational filters are placed where users expect them, helping the report support recurring operational
+            and management questions.
+          </p>
+        </div>
+
+        <div class="card">
+          <div class="kicker">Visual system</div>
+          <h3>High contrast and restrained colour</h3>
+          <p>
+            The dark interface with a single accent colour creates a clear visual hierarchy and keeps attention on the analytical content.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <div class="section-title">
+        <div>
+          <div class="eyebrow">05 / Skills Demonstrated</div>
+          <h2>Business analysis through reporting</h2>
+        </div>
+      </div>
+
+      <div class="card">
+        <p>
+          This project demonstrates the ability to structure a business reporting problem, define useful KPIs,
+          design an interactive reporting experience and communicate management information through data visualisation.
+        </p>
+
+        <div class="skills">
+          <span class="skill">Power BI</span>
+          <span class="skill">KPI Design</span>
+          <span class="skill">Data Visualisation</span>
+          <span class="skill">Interactive Reporting</span>
+          <span class="skill">Business Analysis</span>
+          <span class="skill">Management Reporting</span>
+          <span class="skill">Dashboard UX</span>
+        </div>
+      </div>
+
+      <div style="height:18px"></div>
+
+      <div class="note">
+        <strong>Confidentiality note:</strong> values in the portfolio version are anonymised.
+        Add DAX, Power Query, data modelling or SQL to the skills section only if you actually used them in this project.
+      </div>
+    </section>
+
+    <div class="cta">
+      <div>
+        <h2>Portfolio-ready for GitHub Pages.</h2>
+        <p>
+          Keep this case study as your first project. When you build more dashboards, add a homepage with project cards
+          and keep this page as the detailed project view.
+        </p>
+      </div>
+      <a class="btn primary" href="#top">Back to top ↑</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      Power BI Portfolio · Expense Analytics Dashboard
+    </div>
+  </footer>
+</body>
+</html>
